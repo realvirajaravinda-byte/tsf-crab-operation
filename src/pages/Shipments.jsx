@@ -5,6 +5,7 @@ import DocChecklist from '../features/documents/DocChecklist'
 import { statusLabel, STATUS_COLOR } from '../lib/constants'
 import Badge from '../components/Badge'
 import Drawer from '../components/Drawer'
+import Section from '../components/Section'
 import RoleGate from '../auth/RoleGate'
 
 export default function Shipments() {
@@ -71,9 +72,10 @@ export default function Shipments() {
             onCancel={() => setDrawer(null)}
           />
           {drawer.mode === 'edit' && (
-            <div style={{ marginTop: 24 }}>
-              <h2>Clearance documents</h2>
-              <DocChecklist consignmentId={drawer.row.id} />
+            <div style={{ marginTop: 12 }}>
+              <Section title="Clearance documents">
+                <DocChecklist consignmentId={drawer.row.id} />
+              </Section>
             </div>
           )}
         </Drawer>
