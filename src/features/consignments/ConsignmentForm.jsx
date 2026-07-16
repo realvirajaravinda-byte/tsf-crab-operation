@@ -47,7 +47,7 @@ export default function ConsignmentForm({ initial, onSubmit, onCancel }) {
 
   return (
     <form onSubmit={submit} className="stack">
-      <Section title="Status" defaultOpen>
+      <Section title="Status">
         <div className="field">
           <label>Status</label>
           <select value={form.status} onChange={(e) => set('status', e.target.value)}>
@@ -56,7 +56,7 @@ export default function ConsignmentForm({ initial, onSubmit, onCancel }) {
         </div>
       </Section>
 
-      <Section title="ETA & dates" defaultOpen>
+      <Section title="ETA & dates">
         <div className="form-grid">
           <F label="ETD"><input type="date" value={form.etd || ''} onChange={(e) => set('etd', e.target.value)} /></F>
           <F label="Original ETA"><input type="date" value={form.original_eta || ''} onChange={(e) => set('original_eta', e.target.value)} /></F>
