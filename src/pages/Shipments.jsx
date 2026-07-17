@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useConsignments } from '../features/consignments/useConsignments'
 import ConsignmentForm from '../features/consignments/ConsignmentForm'
-import DocChecklist from '../features/documents/DocChecklist'
+import ProcessWorkflow from '../features/documents/ProcessWorkflow'
 import { statusLabel, STATUS_COLOR } from '../lib/constants'
+import { buildShipmentMailto } from '../features/consignments/mailto'
+import { supabase } from '../lib/supabase'
 import Badge from '../components/Badge'
 import Drawer from '../components/Drawer'
 import Section from '../components/Section'
@@ -66,6 +68,7 @@ export default function Shipments() {
           title={drawer.mode === 'new' ? 'New shipment' : drawer.row.supplier}
           onClose={() => setDrawer(null)}
         >
+          {drawer.mode === 'edit' && <EmailSummaryButton row={drawer.row} />}
           <ConsignmentForm
             initial={drawer.mode === 'edit' ? drawer.row : null}
             onSubmit={handleSubmit}
@@ -73,13 +76,31 @@ export default function Shipments() {
           />
           {drawer.mode === 'edit' && (
             <div style={{ marginTop: 12 }}>
-              <Section title="Clearance documents">
-                <DocChecklist consignmentId={drawer.row.id} />
+              <Section title="Process workflow">
+                <ProcessWorkflow consignmentId={drawer.row.id} />
               </Section>
             </div>
           )}
         </Drawer>
       )}
+    </div>
+  )
+}
+
+// Fetches docs for the shipment and opens the user's email app with a summary.
+function EmailSummaryButton({ row }) {
+  const [docs, setDocs] = useState([])
+  useEffect(() => {
+    supabase.from('consignment_documents').select('doc_name,status')
+      .eq('consignment_id', row.id).order('created_at')
+      .then(({ data }) => setDocs(data || []))
+  }, [row.id])
+
+  return (
+    <div style={{ marginBottom: 12 }}>
+      <a className="btn" href={buildShipmentMailto(row, docs)}>
+        ✉ Email summary
+      </a>
     </div>
   )
 }
