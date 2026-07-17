@@ -39,6 +39,7 @@ export function AuthProvider({ children }) {
   }, [session])
 
   const role = profile?.role ?? null
+  const department = profile?.department ?? null
   const canWrite = WRITER_ROLES.includes(role)
 
   const value = {
@@ -46,6 +47,7 @@ export function AuthProvider({ children }) {
     user: session?.user ?? null,
     profile,
     role,
+    department,
     canWrite,
     loading,
     signOut: () => supabase.auth.signOut(),
